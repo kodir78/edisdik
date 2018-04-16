@@ -1,0 +1,136 @@
+<?php
+
+if (!defined('BASEPATH'))
+    exit('No direct script access allowed');
+
+class Tbl_sekolah_model extends CI_Model
+{
+
+    public $table = 'tbl_sekolah';
+    public $id = 'id_data_sekolah';
+    //public $order = 'DESC';
+    public $order = 'ASC';
+
+    function __construct()
+    {
+        parent::__construct();
+    }
+
+    // datatables
+    function json() {
+        $this->datatables->select('id_data_sekolah,npsn,nss,id_jenjang_sekolah,nama_sekolah,status_sekolah,id_status_kepemilikan,id_opdpembina,kebutuhan_khusus,mbs,penerima_bos,sertifikat_iso,id_kategori_wilayah,id_waktu_penyelengaraan,provinci_id,regency_id,id_distrcs,id_villages,no_sk_pendirian,tgl_sk,file_pendirian,logo,tgl_input,user_input,tgl_update,user_update');
+        $this->datatables->from('tbl_sekolah');
+        //add this line for join
+        //$this->datatables->join('table2', 'tbl_sekolah.field = table2.field');
+        $this->datatables->add_column('action', anchor(site_url('sekolah/read/$1'),'<i class="fa fa-eye" aria-hidden="true"></i>', array('class' => 'btn btn-success btn-sm'))." 
+            ".anchor(site_url('sekolah/update/$1'),'<i class="fa fa-pencil-square-o" aria-hidden="true"></i>', array('class' => 'btn btn-info btn-sm'))." 
+                ".anchor(site_url('sekolah/delete/$1'),'<i class="fa fa-trash-o" aria-hidden="true"></i>','class="btn btn-danger btn-sm" onclick="javasciprt: return confirm(\'Are You Sure ?\')"'), 'id_data_sekolah');
+        return $this->datatables->generate();
+    }
+
+    // get all
+    function get_all()
+    {
+        $this->db->order_by($this->id, $this->order);
+        return $this->db->get($this->table)->result();
+    }
+
+    // get data by id
+    function get_by_id($id)
+    {
+        $this->db->where($this->id, $id);
+        return $this->db->get($this->table)->row();
+    }
+    
+    // get total rows
+    function total_rows($q = NULL) {
+        $this->db->like('id_data_sekolah', $q);
+	$this->db->or_like('npsn', $q);
+	$this->db->or_like('nss', $q);
+	$this->db->or_like('id_jenjang_sekolah', $q);
+	$this->db->or_like('nama_sekolah', $q);
+	$this->db->or_like('status_sekolah', $q);
+	$this->db->or_like('id_status_kepemilikan', $q);
+	$this->db->or_like('id_opdpembina', $q);
+	$this->db->or_like('kebutuhan_khusus', $q);
+	$this->db->or_like('mbs', $q);
+	$this->db->or_like('penerima_bos', $q);
+	$this->db->or_like('sertifikat_iso', $q);
+	$this->db->or_like('id_kategori_wilayah', $q);
+	$this->db->or_like('id_waktu_penyelengaraan', $q);
+	$this->db->or_like('provinci_id', $q);
+	$this->db->or_like('regency_id', $q);
+	$this->db->or_like('id_distrcs', $q);
+	$this->db->or_like('id_villages', $q);
+	$this->db->or_like('no_sk_pendirian', $q);
+	$this->db->or_like('tgl_sk', $q);
+	$this->db->or_like('file_pendirian', $q);
+	$this->db->or_like('logo', $q);
+	$this->db->or_like('tgl_input', $q);
+	$this->db->or_like('user_input', $q);
+	$this->db->or_like('tgl_update', $q);
+	$this->db->or_like('user_update', $q);
+	$this->db->from($this->table);
+        return $this->db->count_all_results();
+    }
+
+    // get data with limit and search
+    function get_limit_data($limit, $start = 0, $q = NULL) {
+        $this->db->order_by($this->id, $this->order);
+        $this->db->like('id_data_sekolah', $q);
+	$this->db->or_like('npsn', $q);
+	$this->db->or_like('nss', $q);
+	$this->db->or_like('id_jenjang_sekolah', $q);
+	$this->db->or_like('nama_sekolah', $q);
+	$this->db->or_like('status_sekolah', $q);
+	$this->db->or_like('id_status_kepemilikan', $q);
+	$this->db->or_like('id_opdpembina', $q);
+	$this->db->or_like('kebutuhan_khusus', $q);
+	$this->db->or_like('mbs', $q);
+	$this->db->or_like('penerima_bos', $q);
+	$this->db->or_like('sertifikat_iso', $q);
+	$this->db->or_like('id_kategori_wilayah', $q);
+	$this->db->or_like('id_waktu_penyelengaraan', $q);
+	$this->db->or_like('provinci_id', $q);
+	$this->db->or_like('regency_id', $q);
+	$this->db->or_like('id_distrcs', $q);
+	$this->db->or_like('id_villages', $q);
+	$this->db->or_like('no_sk_pendirian', $q);
+	$this->db->or_like('tgl_sk', $q);
+	$this->db->or_like('file_pendirian', $q);
+	$this->db->or_like('logo', $q);
+	$this->db->or_like('tgl_input', $q);
+	$this->db->or_like('user_input', $q);
+	$this->db->or_like('tgl_update', $q);
+	$this->db->or_like('user_update', $q);
+	$this->db->limit($limit, $start);
+        return $this->db->get($this->table)->result();
+    }
+
+    // insert data
+    function insert($data)
+    {
+        $this->db->insert($this->table, $data);
+    }
+
+    // update data
+    function update($id, $data)
+    {
+        $this->db->where($this->id, $id);
+        $this->db->update($this->table, $data);
+    }
+
+    // delete data
+    function delete($id)
+    {
+        $this->db->where($this->id, $id);
+        $this->db->delete($this->table);
+    }
+
+}
+
+/* End of file Tbl_sekolah_model.php */
+/* Location: ./application/models/Tbl_sekolah_model.php */
+/* Please DO NOT modify this information : */
+/* Generated by Harviacode Codeigniter CRUD Generator 2018-03-31 15:03:28 */
+/* http://harviacode.com */
